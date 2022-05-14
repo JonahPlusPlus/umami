@@ -1,13 +1,7 @@
+@0x9068dbeb0e5b4a71;
 using Go = import "/go.capnp";
-$Go.package("proto")
-$Go.import("github.com/JonahPlusPlus/umami/internal/proto")
-
-struct ResultA(T) {
-    union {
-        success @0 :T;
-        error @1 :Text;
-    }
-}
+$Go.package("umami");
+$Go.import("github.com/JonahPlusPlus/umami/internal/umami");
 
 struct Map(K, V) {
     entries @0 :List(Entry);
@@ -21,15 +15,15 @@ interface Node {}
 
 interface Tree extends (Node) {
     # Map (names)
-    open @0 (name :Text) -> (result :ResultA(Node));
-    insert @1 (name: Text, node :Node) -> (result :ResultA(Void));
-    remove @2 (name: Text) -> (result :ResultA(Node));
-    contains @3 (name :Text) -> (result :ResultA(Bool));
+    open @0 (name :Text) -> (result :Node);
+    insert @1 (name: Text, node :Node) -> ();
+    remove @2 (name: Text) -> (result :Node);
+    contains @3 (name :Text) -> (result :Bool);
 }
 
 interface Leaf extends (Node) {
     # Value (endpoint)
-    read @0 () -> (result :ResultA(Value));
+    read @0 () -> (result :Value);
     struct Value {
         union {
             void @0  :Void;
@@ -51,6 +45,6 @@ interface Leaf extends (Node) {
 }
 
 interface Umami {
-    getToken @0 (id :Text, passcode :Text) -> (result :ResultA(Text));
-    getRoot @1 (token :Text) -> (result :ResultA(Node));
+    getToken @0 (id :Text, passcode :Text) -> (result :Text);
+    getRoot @1 (token :Text) -> (result :Node);
 }
